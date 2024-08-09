@@ -11,26 +11,7 @@ const CREDENTIALS = {
 const POINT_TEST_ID = 'test';
 
 const Tracking = () => {
-  const [points, setPoints] = useState({
-    'test1': {
-      latitude: 41.325067,
-      longitude: 69.243680,
-      driver_id: 'test1',
-      full_name: 'Test',
-    },
-    'test2': {
-      latitude: 41.329579,
-      longitude: 69.184457, 
-      driver_id: 'test2',
-      full_name: 'Test',
-    },
-    'test3': {
-      latitude: 41.330636,
-      longitude: 69.337790, 
-      driver_id: 'test3',
-      full_name: 'Test',
-    },
-  });
+  const [points, setPoints] = useState({});
 
   useEffect(() => {
     (async () => {
@@ -54,7 +35,7 @@ const Tracking = () => {
           const newRecord = { ...prev };
           newRecord[point.driver_id || 'test'] = {
             ...point,
-            driver_id: point.driver_id || POINT_TEST_ID
+            driver_id: point.driver_id?.toString() || POINT_TEST_ID
           };
           return newRecord;
         });

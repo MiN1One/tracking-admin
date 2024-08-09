@@ -10,6 +10,7 @@ import config from './config/config';
 import store from './redux/store';
 import Admin from './routes/admin';
 import Auth from './routes/auth';
+import './static/css/main.css';
 import './static/css/style.css';
 
 const { theme } = config;
