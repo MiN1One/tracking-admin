@@ -1,0 +1,1 @@
+export const getTrackingWSConnection = (token) => `${process.env.REACT_APP_WEBSOCKET_TRACKING_URL}/?token=${token}`;
