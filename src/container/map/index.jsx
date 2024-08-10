@@ -1,32 +1,23 @@
 import throttle from 'lodash.throttle';
 import { memo, useEffect, useMemo, useState } from 'react';
-import { MapboxMap } from '../../components/common/Map';
-import { axiosClient, getTrackingWSConnection } from '../../config/api';
-
-const CREDENTIALS = {
-  email: 'admin@gmail.com',
-  password: 'Asilbek2001',
-};
+import { useSelector } from 'react-redux';
+import { getTrackingWSConnection } from '../../config/api';
+import { MapboxMap } from './Map';
 
 const POINT_TEST_ID = 'test';
+const POINT_UPDATE_INTERVAL = 2000;
 
 const Tracking = () => {
   const [points, setPoints] = useState({});
+  const authToken = useSelector((state) => state.auth.login);
+  const [activeDriver, setActiveDriver] = useState(null);
 
   useEffect(() => {
     (async () => {
-      const { data } = await axiosClient('login/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: JSON.stringify(CREDENTIALS),
-      });
-
-      const socket = new WebSocket(getTrackingWSConnection(data.token));
-      socket.onerror = (error) => 
+      const socket = new WebSocket(getTrackingWSConnection(authToken));
+      socket.onerror = (error) =>
         console.error('WebSocket error:', error);
-      socket.onclose = () => 
+      socket.onclose = () =>
         alert('Connection to server has closed');
 
       socket.onmessage = throttle((event) => {
@@ -39,13 +30,20 @@ const Tracking = () => {
           };
           return newRecord;
         });
-      }, 2000);
+      }, POINT_UPDATE_INTERVAL);
     })();
-  }, []);
+  }, [authToken]);
 
   const pointsArr = useMemo(() => Object.values(points), [points]);
 
-  return <MapboxMap points={pointsArr} />;
+  return (
+    <MapboxMap
+      points={pointsArr}
+      setActiveDriver={setActiveDriver}
+      activeDriver={activeDriver}
+      pointsRecord={points}
+    />
+  );
 };
 
 export default memo(Tracking);

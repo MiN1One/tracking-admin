@@ -2,15 +2,21 @@
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   padding: 20px;
+  padding-right: 25px;
   width: 300px;
 }
 
 .mapboxgl-popup-close-button {
   font-size: 25px;
   color: #b5b5b5;
+  padding: 5px;
 }
 
 .map {
+  height: 90vh;
+  width: 100%;
+  position: relative;
+
   &__popup-content {
     display: flex;
     flex-direction: column;
@@ -21,19 +27,6 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 7px;
-  }
-
-  &__copy {
-    background-color: #5cd18d;
-    color: #fff;
-    border-radius: 3px;
-    padding: 2px 10px;
-    width: max-content;
-    font-size: 12px;
-
-    &:hover {
-      background-color: #4aac73;
-    }
   }
 
   &__place {

@@ -1,84 +1,47 @@
-import { FacebookOutlined, TwitterOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, NavLink, useHistory } from 'react-router-dom';
-import { Checkbox } from '../../../../components/checkbox/checkbox';
 import Heading from '../../../../components/heading/heading';
 import { login } from '../../../../redux/authentication/actionCreator';
 import { AuthWrapper } from './style';
 
 function SignIn() {
-  const history = useHistory();
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.auth.loading);
   const [form] = Form.useForm();
-  const [state, setState] = useState({
-    checked: null,
-  });
-
-  const handleSubmit = () => {
-    dispatch(login());
-    history.push('/admin');
-  };
-
-  const onChange = (checked) => {
-    setState({ ...state, checked });
+ 
+  const handleSubmit = async (values) => {
+    dispatch(login(values));
   };
 
   return (
     <AuthWrapper>
-      <p className="auth-notice">
-        Don&rsquo;t have an account? <NavLink to="#">Sign up now</NavLink>
-      </p>
       <div className="auth-contents">
         <Form name="login" form={form} onFinish={handleSubmit} layout="vertical">
           <Heading as="h3">
             Sign in to <span className="color-secondary">Admin</span>
           </Heading>
           <Form.Item
-            name="username"
-            rules={[{ message: 'Please input your username or Email!', required: true }]}
-            initialValue="name@example.com"
-            label="Username or Email Address"
+            name="email"
+            rules={[{ message: 'Please input your email', required: true }]}
+            label="Email Address"
           >
             <Input />
           </Form.Item>
-          <Form.Item name="password" initialValue="123456" label="Password">
+          <Form.Item name="password" label="Password">
             <Input.Password placeholder="Password" />
           </Form.Item>
-          <div className="auth-form-action">
+          {/* <div className="auth-form-action">
             <Checkbox onChange={onChange}>Keep me logged in</Checkbox>
             <NavLink className="forgot-pass-link" to="#">
               Forgot password?
             </NavLink>
-          </div>
+          </div> */}
           <Form.Item>
             <Button className="btn-signin" htmlType="submit" type="primary" size="large">
               {isLoading ? 'Loading...' : 'Sign In'}
             </Button>
           </Form.Item>
-          <p className="form-divider">
-            <span>Or</span>
-          </p>
-          <ul className="social-login">
-            <li>
-              <Link className="google-signup" to="#">
-                <img src={require('../../../../static/img/google.png')} alt="" />
-                <span>Sign in with Google</span>
-              </Link>
-            </li>
-            <li>
-              <Link className="facebook-sign" to="#">
-                <FacebookOutlined />
-              </Link>
-            </li>
-            <li>
-              <Link className="twitter-sign" to="#">
-                <TwitterOutlined />
-              </Link>
-            </li>
-          </ul>
         </Form>
       </div>
     </AuthWrapper>

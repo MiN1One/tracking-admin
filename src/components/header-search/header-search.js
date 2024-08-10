@@ -1,12 +1,8 @@
-import React from 'react';
-import { Input, Row, Col } from 'antd';
-import { NavLink } from 'react-router-dom';
-import FeatherIcon from 'feather-icons-react';
-import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Div } from './header-search-style';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import { headerSearchAction } from '../../redux/headerSearch/actionCreator';
-import { Popover } from '../popup/popup';
 
 const HeaderSearch = ({ darkMode }) => {
   const dispatch = useDispatch();
@@ -37,7 +33,7 @@ const HeaderSearch = ({ darkMode }) => {
 
   return (
     <>
-      <Div className="certain-category-search-wrapper" style={{ width: '100%' }} darkMode={darkMode}>
+      {/* <Div className="certain-category-search-wrapper" style={{ width: '100%' }} darkMode={darkMode}>
         <Row className="ant-row-middle">
           <Col md={2} xs={1} className={rtl ? 'text-left' : 'text-right'}>
             <span className="certain-category-icon">
@@ -55,7 +51,7 @@ const HeaderSearch = ({ darkMode }) => {
             </Popover>
           </Col>
         </Row>
-      </Div>
+      </Div> */}
     </>
   );
 };

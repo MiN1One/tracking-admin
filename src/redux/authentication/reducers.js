@@ -1,10 +1,10 @@
-import Cookies from 'js-cookie';
+import { getItem } from '../../utility/localStorageControl';
 import actions from './actions';
 
 const { LOGIN_BEGIN, LOGIN_SUCCESS, LOGIN_ERR, LOGOUT_BEGIN, LOGOUT_SUCCESS, LOGOUT_ERR } = actions;
 
 const initState = {
-  login: Cookies.get('logedIn'),
+  login: getItem('access_token'),
   loading: false,
   error: null,
 };

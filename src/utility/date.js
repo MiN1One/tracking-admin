@@ -9,10 +9,5 @@ export const timeAgo = (pastTime) => {
   const unit = units.find((unit) => diff.get(unit) !== 0) || units.slice(-1)[0];
 
   const value = Math.floor(diff.get(unit));
-
-  if (!value && unit === 'seconds') {
-    return 'fresh';
-  }
-  
   return `${value} ${unit} ago`;
 };

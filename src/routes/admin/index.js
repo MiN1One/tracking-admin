@@ -1,10 +1,8 @@
 import { Spin } from 'antd';
 import React, { Suspense } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-
+import Tracking from '../../container/map/index';
 import withAdminLayout from '../../layout/withAdminLayout';
-import Tracking from '../tracking';
-import Dashboard from './dashboard';
 
 const Admin = () => {
   const { path } = useRouteMatch();
@@ -18,8 +16,7 @@ const Admin = () => {
           </div>
         }
       >
-        <Route path={path} component={Dashboard} />
-        <Route path={`${path}/tracking`} component={Tracking} />
+        <Route path={path} component={Tracking} />
       </Suspense>
     </Switch>
   );

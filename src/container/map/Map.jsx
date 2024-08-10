@@ -2,46 +2,24 @@ import debounce from 'lodash.debounce';
 import { Map, Popup } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useEffect, useRef, useState } from 'react';
-import { getPlaceName } from '../../config/api/map';
-import truckImage from '../../static/img/truck-1.png';
-import { copyToClipboard } from '../../utility/browser';
-import { timeAgo } from '../../utility/date';
+import truckImage from '../../static/img/truck-3.png';
+import { getPointProperties, onHoverMapPoint, renderPopupContent } from '../../utility/map';
+import DriversList from './DriversList';
 
 const SOURCE_NAME = 'track-source';
 const ICON_NAME = 'truck';
 const ICON_SIZE = .035;
+const DEFAULT_ZOOM = 10;
+const ACTIVE_POINT_ZOOM = 15;
 
-const onHoverPoint = debounce(async (map, popup, e) => {
-  const canvas = map.getCanvas();
-  canvas.style.cursor = 'progress';
-  const [{ properties }] = e.features;
-  const { lng, lat } = e.lngLat;
-  const placeName = await getPlaceName(lng, lat);
-  canvas.style.cursor = 'pointer';
-  popup
-    .setLngLat(e.lngLat)
-    .setHTML(
-      `<div class="map__popup-content">
-        <div class="map__head">
-          <span class="map__driver">
-            ${properties.fullName}
-          </span>
-          <button class="map__copy" data-id="${properties.id}">
-            Copy
-          </button>
-        </div>
-        <span class="map__place">${placeName}</span>
-        <span class="map__time">${timeAgo(properties.date)}</span>
-      </div>`,
-    )
-    .addTo(map);
-  const copyBtn = e.target._container.querySelector(
-    `[data-id="${properties.id}"]`
-  );
-  copyBtn.onclick = () => copyToClipboard(`${lng}, ${lat}`);
-}, 1000);
+const onHoverPoint = debounce(onHoverMapPoint, 1000);
 
-export const MapboxMap = ({ points = [] }) => {
+export const MapboxMap = ({
+  points = [],
+  pointsRecord,
+  setActiveDriver,
+  activeDriver
+}) => {
   const mapContainer = useRef(null);
   const popupRef = useRef(null);
   const loadStartedRef = useRef(false);
@@ -55,11 +33,7 @@ export const MapboxMap = ({ points = [] }) => {
         type: 'Point',
         coordinates: [point.longitude, point.latitude],
       },
-      properties: {
-        fullName: point.full_name,
-        id: point.driver_id,
-        date: point.sent_time
-      }
+      properties: getPointProperties(point)
     }));
 
     map.addSource(SOURCE_NAME, {
@@ -95,11 +69,30 @@ export const MapboxMap = ({ points = [] }) => {
       closeOnClick: false,
       maxWidth: 300,
       offset: 10,
-      focusAfterOpen: true
+      focusAfterOpen: true,
     });
 
-    map.on('mouseenter', pointIds, (e) => onHoverPoint(map, popupRef.current, e));
+    popupRef.current.on('close', () => setActiveDriver(null));
+    map.on('mouseenter', pointIds, (e) => onHoverPoint(map, popupRef.current, e, setActiveDriver));
     map.on('mouseleave', pointIds, () => onMouseLeavePoint(map));
+  };
+
+  const renderPopupForPoint = async (driverId, keepZoom) => {
+    const point = pointsRecord[driverId];
+    if (!point) return;
+    await renderPopupContent(
+      mapState,
+      popupRef.current,
+      point.longitude,
+      point.latitude,
+      getPointProperties(point),
+      mapContainer.current
+    );
+    setActiveDriver(driverId);
+    if (!keepZoom) {
+      mapState.setCenter([point.longitude, point.latitude]);
+      mapState.setZoom(ACTIVE_POINT_ZOOM);
+    }
   };
 
   useEffect(() => {
@@ -113,16 +106,18 @@ export const MapboxMap = ({ points = [] }) => {
             type: 'Point',
             coordinates: [point.longitude, point.latitude],
           },
-          properties: {
-            fullName: point.full_name,
-            id: point.driver_id,
-            date: point.sent_time
-          },
+          properties: getPointProperties(point),
         })),
       };
       mapState.getSource(SOURCE_NAME)?.setData(newPoints);
     }
   }, [points, mapState]);
+
+  useEffect(() => {
+    if (activeDriver && mapState) {
+      renderPopupForPoint(activeDriver, true);
+    }
+  }, [activeDriver, points, mapState]);
 
   useEffect(() => {
     if (!loadStartedRef.current && points.length) {
@@ -133,7 +128,7 @@ export const MapboxMap = ({ points = [] }) => {
         container: mapContainer.current,
         style: 'mapbox://styles/mapbox/streets-v11',
         center: [firstPoint.longitude, firstPoint.latitude],
-        zoom: 9,
+        zoom: DEFAULT_ZOOM,
         accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
         attributionControl: false,
       });
@@ -150,5 +145,13 @@ export const MapboxMap = ({ points = [] }) => {
     }
   }, [points.length]);
 
-  return <div ref={mapContainer} style={{ width: '100%', height: '90vh' }} />;
+  return (
+    <div className="map" ref={mapContainer}>
+      <DriversList
+        activeDriver={activeDriver}
+        renderPopupForPoint={renderPopupForPoint}
+        pointsRecord={pointsRecord}
+      />
+    </div>
+  );
 };
