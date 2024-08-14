@@ -219,7 +219,7 @@ const Div = Styled.div`
             ${({ theme }) => (theme.rtl ? 'margin-left' : 'margin-right')}: 0;
         }
         img{
-            max-width: ${({ theme }) => (theme.topMenu ? '140px' : '120px')};
+            max-width: ${({ theme }) => (theme.topMenu ? '120px' : '100px')};
             width: 100%;
         }
         &.top-menu{
@@ -1010,4 +1010,5 @@ const NavTitle = Styled.p`
     padding: 0px 15px;
     display: flex;
 `;
-export { Div, SmallScreenAuthInfo, SmallScreenSearch, ModeSwitch, TopMenuStyle, TopMenuSearch, NavTitle };
+export { Div, ModeSwitch, NavTitle, SmallScreenAuthInfo, SmallScreenSearch, TopMenuSearch, TopMenuStyle };
+

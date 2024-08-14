@@ -1,17 +1,19 @@
 /* eslint-disable no-shadow */
-import React, { Component } from 'react';
-import { Layout, Button, Row, Col } from 'antd';
+import { Button, Col, Layout, Row } from 'antd';
 import FeatherIcon from 'feather-icons-react';
-import { NavLink, Link } from 'react-router-dom';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { ThemeProvider } from 'styled-components';
-import { connect } from 'react-redux';
 import propTypes from 'prop-types';
+import React, { Component } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { connect } from 'react-redux';
+import { Link, NavLink } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
+import HeaderSearch from '../components/header-search/header-search';
+import AuthInfo from '../components/utilities/auth-info/info';
+import imageDark from '../static/img/noasis 1.png';
+import imageWhite from '../static/img/noasis 3.png';
 import MenueItems from './MenueItems';
 import TopMenu from './TopMenu';
 import { Div, SmallScreenAuthInfo, SmallScreenSearch, TopMenuSearch } from './style';
-import HeaderSearch from '../components/header-search/header-search';
-import AuthInfo from '../components/utilities/auth-info/info';
 
 const { darkTheme } = require('../config/theme/themeVariables');
 
@@ -172,8 +174,8 @@ const ThemeLayout = (WrappedComponent) => {
                     <img
                       src={
                         !darkMode
-                          ? require(`../static/img/Logo_Dark.svg`).default
-                          : require(`../static/img/Logo_white.png`).default
+                          ? imageDark
+                          : imageWhite
                       }
                       alt=""
                     />

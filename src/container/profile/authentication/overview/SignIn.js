@@ -19,7 +19,7 @@ function SignIn() {
       <div className="auth-contents">
         <Form name="login" form={form} onFinish={handleSubmit} layout="vertical">
           <Heading as="h3">
-            Sign in to <span className="color-secondary">Admin</span>
+            Sign in to <span className="color-secondary">Noasis</span>
           </Heading>
           <Form.Item
             name="email"

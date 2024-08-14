@@ -59,7 +59,9 @@ export const MapboxMap = ({
   };
 
   const onMouseLeavePoint = (map = mapState) => {
-    map.getCanvas().style.cursor = '';
+    map.getCanvas().style.removeProperty('cursor');
+    popupRef.current.remove();
+    setActiveDriver(null);
   };
 
   const attachMouseEvents = (map = mapState) => {
@@ -67,26 +69,26 @@ export const MapboxMap = ({
     popupRef.current = new Popup({
       closeButton: true,
       closeOnClick: false,
+      closeOnMove: false,
       maxWidth: 300,
       offset: 10,
       focusAfterOpen: true,
     });
 
-    popupRef.current.on('close', () => setActiveDriver(null));
+    popupRef.current.on('close', () => onMouseLeavePoint(map));
     map.on('mouseenter', pointIds, (e) => onHoverPoint(map, popupRef.current, e, setActiveDriver));
     map.on('mouseleave', pointIds, () => onMouseLeavePoint(map));
   };
 
   const renderPopupForPoint = async (driverId, keepZoom) => {
     const point = pointsRecord[driverId];
-    if (!point) return;
-    await renderPopupContent(
+    if (!point || !mapState) return;
+    renderPopupContent(
       mapState,
       popupRef.current,
       point.longitude,
       point.latitude,
       getPointProperties(point),
-      mapContainer.current
     );
     setActiveDriver(driverId);
     if (!keepZoom) {

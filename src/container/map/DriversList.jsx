@@ -42,7 +42,7 @@ const DriversList = ({ activeDriver, pointsRecord, renderPopupForPoint }) => {
 
   const onCopyCoordinates = (e, point) => {
     e.stopPropagation();
-    copyToClipboard(`${point.longitude}, ${point.latitude}`);
+    copyToClipboard(`${point.latitude}, ${point.longitude}`);
   };
 
   useEffect(() => {
@@ -76,7 +76,6 @@ const DriversList = ({ activeDriver, pointsRecord, renderPopupForPoint }) => {
             </button>
           )}
         </Flex>
-        {/* `${point.longitude} ${point.latitude}` */}
       </li>
     );
   });
