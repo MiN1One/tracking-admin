@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'tracking-admin',
       script: 'serve',
-      args: '-s build',
+      args: '-s build -l 4000',
       env: {
         NODE_ENV: 'production',
       },
