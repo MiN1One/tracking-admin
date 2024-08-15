@@ -23,10 +23,7 @@ const Tracking = () => {
         point.active &&
         hasMinutesPassed(point.sent_time, POINT_ACTIVE_DURATION_MINUTES)
       ) {
-        addPointToMap({
-          point,
-          active: false
-        });
+        addPointToMap({ ...point, active: false });
       }
     });
   };
