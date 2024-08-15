@@ -44,11 +44,21 @@ input {
   border: 1px solid rgba(0, 0, 0, 0.3);
   background: #fff;
 
+  &:hover,
+  &:active {
+    background: #e6e6e6;
+  }
+
   svg {
     width: 15px;
     height: 15px;
     stroke: #686868;
   }
+}
+
+.ant-input-prefix svg {
+  width: 20px;
+  height: 20px;
 }
 
 .tag-label {

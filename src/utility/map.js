@@ -9,8 +9,8 @@ const getPopupContent = (properties, placeName) => `
       <span class="map__driver">
         ${properties.fullName}
       </span>
-      <span class="tag-label">
-        Active
+      <span class="tag-label${properties.active ? '' : ' tag-label--danger'}">
+        ${properties.active ? 'Active' : 'Inactive'}
       </span>
     </div>
     <span class="map__place">${placeName || PLACES_CACHE[properties.id] || ''}</span>
@@ -32,6 +32,26 @@ export const renderPopupContent = (map, popup, lng, lat, properties) => {
   });
 }
 
+export const isPointInBounds = (lng, lat, map) => {
+  const bounds = map.getBounds();
+  return (
+    lng >= bounds.getWest() &&
+    lng <= bounds.getEast() &&
+    lat >= bounds.getSouth() &&
+    lat <= bounds.getNorth()
+  );
+};
+
+export const loadPointImage = (map, imageSrc, imageName) => {
+  return new Promise((res, rej) => {
+    map.loadImage(imageSrc, (error, image) => {
+      if (error) rej(error);
+      map.addImage(imageName, image);
+      res(imageName);
+    });
+  });
+};
+
 export const onHoverMapPoint = async (map, popup, e, onFinishRender) => {
   if (!e) return;
   const canvas = map.getCanvas();
@@ -46,5 +66,8 @@ export const onHoverMapPoint = async (map, popup, e, onFinishRender) => {
 export const getPointProperties = (point) => ({
   fullName: point.full_name,
   id: point.driver_id,
-  date: point.sent_time
+  date: point.sent_time,
+  active: point.active,
+  icon: point.active ? 'active-point' : 'inactive-point',
+  order: point.active ? 99 : 1
 });

@@ -5,7 +5,7 @@ import propTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { connect } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import HeaderSearch from '../components/header-search/header-search';
 import AuthInfo from '../components/utilities/auth-info/info';
@@ -55,6 +55,7 @@ const ThemeLayout = (WrappedComponent) => {
       const left = !rtl ? 'left' : 'right';
       const darkMode = ChangeLayoutMode;
       const toggleCollapsed = () => {
+        window.dispatchEvent(new CustomEvent('resize-map'));
         this.setState({
           collapsed: !collapsed,
         });
@@ -270,20 +271,6 @@ const ThemeLayout = (WrappedComponent) => {
               <Layout className="atbd-main-layout">
                 <Content>
                   <WrappedComponent {...this.props} />
-                  <Footer className="admin-footer" style={footerStyle}>
-                    <Row>
-                      <Col md={12} xs={24}>
-                        <span className="admin-footer__copyright">2023 © SovWare</span>
-                      </Col>
-                      <Col md={12} xs={24}>
-                        <div className="admin-footer__links">
-                          <NavLink to="#">About</NavLink>
-                          <NavLink to="#">Team</NavLink>
-                          <NavLink to="#">Contact</NavLink>
-                        </div>
-                      </Col>
-                    </Row>
-                  </Footer>
                 </Content>
               </Layout>
             </Layout>
