@@ -1,15 +1,27 @@
-import { DateTime } from 'luxon';
+const US_TIMEZONE_DIFFERENCE = 4;
 
 export const timeAgo = (pastTime) => {
-  const pastTimeDate = new DateTime(pastTime);
-  const now = DateTime.now();
-  const diff = now.diff(pastTimeDate, ['years', 'months', 'days', 'hours', 'minutes', 'seconds']);
+  const past = new Date(pastTime);
+  if (pastTime.includes('T')) {
+    past.setHours(past.getHours() + US_TIMEZONE_DIFFERENCE);
+  }
+  const now = new Date();
+  const diffInSeconds = Math.max(Math.floor((now - past) / 1000), 0);
 
-  const units = ['years', 'months', 'days', 'hours', 'minutes', 'seconds'];
-  const unit = units.find((unit) => diff.get(unit) !== 0) || units.slice(-1)[0];
+  if (!diffInSeconds) return 'just now';
 
-  const value = Math.floor(diff.get(unit));
-  return `${value} ${unit} ago`;
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds} seconds ago`;
+  } else if (diffInSeconds < 3600) {
+    const minutes = Math.floor(diffInSeconds / 60);
+    return `${minutes} minutes ago`;
+  } else if (diffInSeconds < 86400) {
+    const hours = Math.floor(diffInSeconds / 3600);
+    return `${hours} hours ago`;
+  } else {
+    const days = Math.floor(diffInSeconds / 86400);
+    return `${days} days ago`;
+  }
 };
 
 export const hasMinutesPassed = (date, minutes) => {
