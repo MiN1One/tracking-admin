@@ -5,6 +5,7 @@ import debounce from 'lodash.debounce';
 import { memo, useEffect, useRef, useState } from "react";
 import { axiosClient } from "../../config/api";
 import { copyToClipboard, findElPosition } from "../../utility/browser";
+import { Contact } from "./Contact";
 
 const DriversList = ({
   activeDriver,
@@ -18,6 +19,7 @@ const DriversList = ({
   const [driversList, setDriversList] = useState([]);
   const listRef = useRef(null);
   const [search, setSearch] = useState('');
+  const [activeDriverContact, setActiveDriverContact] = useState(null);
   const [transparentWindow, setTransparentWindow] = useState(false);
 
   const addDriversLastPoint = (drivers) => {
@@ -25,10 +27,10 @@ const DriversList = ({
       if (driver.id in pointsRecord) return;
       addPointToMap({
         driver_id: driver.id,
-        longitude: driver.last_known_location.longitude,
-        latitude: driver.last_known_location.latitude,
+        longitude: driver.last_known_location?.longitude,
+        latitude: driver.last_known_location?.latitude,
         full_name: driver.full_name,
-        sent_time: driver.last_known_location.timestamp,
+        sent_time: driver.last_known_location?.timestamp,
         active: false,
       });
     });
@@ -98,6 +100,9 @@ const DriversList = ({
               <Icon icon="copy" />
             </button>
           )}
+          <button className="btn-plain" onClick={() => setActiveDriverContact(driver.id)} title="Alert Driver">
+            <Icon icon="phone-call" />
+          </button>
         </Flex>
       </li>
     );
@@ -105,6 +110,11 @@ const DriversList = ({
 
   return (
     <div className={`drivers ${transparentWindow ? 'drivers--pale' : ''}`}>
+      <Contact
+        activeDriverContact={activeDriverContact}
+        setActiveDriverContact={setActiveDriverContact}
+        pointsRecord={pointsRecord}
+      />
       <div className="drivers__head">
         <span>Drivers List</span>
         <Flex alignItems="center" justifyContent="space-between">

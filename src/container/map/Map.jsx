@@ -55,7 +55,8 @@ export const MapboxMap = ({
           'icon-image': ['get', 'icon'],
           'icon-size': ICON_SIZE,
           'icon-allow-overlap': true,
-          'symbol-sort-key': ['get', 'order']
+          'symbol-sort-key': ['get', 'order'],
+          'icon-rotate': ['get', 'rotation'],
         },
       });
     });

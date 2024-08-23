@@ -69,5 +69,6 @@ export const getPointProperties = (point) => ({
   date: point.sent_time,
   active: point.active,
   icon: point.active ? 'active-point' : 'inactive-point',
-  order: point.active ? 99 : 1
+  order: point.active ? 99 : 1,
+  rotation: parseFloat(point.bearing),
 });

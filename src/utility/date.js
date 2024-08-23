@@ -1,4 +1,4 @@
-const US_TIMEZONE_DIFFERENCE = 4;
+const US_TIMEZONE_DIFFERENCE = 5;
 
 export const timeAgo = (pastTime) => {
   const past = new Date(pastTime);
