@@ -1,5 +1,5 @@
 import { getPlaceName } from "../config/api/map";
-import { timeAgo } from "./date";
+import { formatDate } from "./date";
 
 const PLACES_CACHE = {};
 
@@ -14,7 +14,7 @@ const getPopupContent = (properties, placeName) => `
       </span>
     </div>
     <span class="map__place">${placeName || PLACES_CACHE[properties.id] || ''}</span>
-    <span class="map__time">${timeAgo(properties.date)}</span>
+    <span class="map__time">${formatDate(properties.date, properties.timezone)}</span>
   </div>
 `;
 

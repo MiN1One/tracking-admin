@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 const US_TIMEZONE_DIFFERENCE = 5;
 
 export const timeAgo = (pastTime) => {
@@ -30,4 +31,16 @@ export const hasMinutesPassed = (date, minutes) => {
   const differenceInMilliseconds = now - givenDate;
   const differenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
   return differenceInMinutes >= minutes;
-}
+};
+
+export const formatDate = (dateTimeString, timeZone = 'UTC') => {
+  const dateTime = DateTime.fromISO(dateTimeString);
+  const formattedDate = dateTime.toLocaleString({
+    month: 'long',
+    hour: 'numeric',
+    day: 'numeric',
+    minute: 'numeric',
+    timeZone,
+  });
+  return formattedDate;
+};
