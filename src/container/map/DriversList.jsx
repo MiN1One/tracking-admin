@@ -40,7 +40,7 @@ const DriversList = ({
         latitude: driver.last_known_location?.latitude,
         full_name: driver.full_name,
         sent_time: driver.last_known_location?.timestamp,
-        active: false,
+        active: driver.is_online,
         timezone: driver.last_known_location?.timezone,
       });
     });
