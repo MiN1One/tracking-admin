@@ -1,10 +1,7 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
-import { Button } from "antd";
-import axios from 'axios';
+import { Box, Flex, Text } from '@chakra-ui/react';
+import { Button } from 'antd';
 import Icon from 'feather-icons-react';
-import { useMemo, useState } from "react";
-
-const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
+import { useMemo } from 'react';
 
 const alertActions = [
   {
@@ -43,25 +40,11 @@ export const Contact = ({
   activeDriverContact,
   setActiveDriverContact,
   pointsRecord,
+  loading,
+  onSendAction
 }) => {
-  const [loading, setLoading] = useState(false);
-
-  const onSendAction = async (action) => {
-    try {
-      setLoading(true);
-      await axios.post(`${API_ENDPOINT}custom-update/`, {
-        action,
-        driver_id: activeDriverContact
-      });
-    } catch (er) {
-      console.error('Error sending contact action to driver: ', er);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const actionButtonEls = useMemo(() => {
-    return alertActions.map(action => {
+    return alertActions.map((action) => {
       return (
         <Button
           key={action.value}

@@ -1,11 +1,14 @@
 import { Center, Flex } from '@chakra-ui/react';
 import { Input, notification, Spin, Switch } from 'antd';
+import axios from 'axios';
 import Icon from 'feather-icons-react';
 import debounce from 'lodash.debounce';
 import { memo, useEffect, useRef, useState } from 'react';
 import { axiosClient } from '../../config/api';
-import { copyToClipboard, findElPosition } from '../../utility/browser';
+import { copyToClipboard } from '../../utility/browser';
 import { Contact } from './Contact';
+
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
 
 const DriversList = ({
   activeDriver,
@@ -22,11 +25,12 @@ const DriversList = ({
   const [activeDriverContact, setActiveDriverContact] = useState(null);
   const [transparentWindow, setTransparentWindow] = useState(false);
   const [api, contextHolder] = notification.useNotification();
+  const [loadingAction, setLoadingAction] = useState(false);
 
-  const openNotification = (coordinates) => {
+  const openNotification = (description, message = 'Copied the coordinates',) => {
     api.info({
-      message: 'Copied the coordinates:',
-      description: coordinates,
+      message,
+      description,
       placement: 'bottomRight',
     });
   };
@@ -44,6 +48,21 @@ const DriversList = ({
         timezone: driver.last_known_location?.timezone,
       });
     });
+  };
+
+  const onSendAction = async (action, driverId = activeDriverContact) => {
+    try {
+      setLoadingAction(true);
+      await axios.post(`${API_ENDPOINT}custom-update/`, {
+        action,
+        driver_id: driverId,
+      });
+      openNotification('Successfully sent action', `Driver ID: ${driverId}`);
+    } catch (er) {
+      console.error('Error sending contact action to driver: ', er);
+    } finally {
+      setLoadingAction(false);
+    }
   };
 
   const fetchDrivers = useRef(
@@ -66,10 +85,8 @@ const DriversList = ({
 
   useEffect(() => {
     if (activeDriver) {
-      listRef.current.scrollTo({
-        top: findElPosition(`[data-driver-id="${activeDriver}"]`),
-        behavior: 'smooth',
-      });
+      document.querySelector(`[data-driver-id="${activeDriver}"]`)
+        ?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [activeDriver]);
 
@@ -107,6 +124,14 @@ const DriversList = ({
           <button className="btn-plain" onClick={() => setActiveDriverContact(driver.id)} title="Alert Driver">
             <Icon icon="phone-call" />
           </button>
+          <button
+            className="btn-plain"
+            disabled={loadingAction}
+            onClick={() => onSendAction('reload', driver.id)}
+            title="Reload"
+          >
+            <Icon icon="loader" />
+          </button>
         </Flex>
       </li>
     );
@@ -116,6 +141,8 @@ const DriversList = ({
     <div className={`drivers ${transparentWindow ? 'drivers--pale' : ''}`}>
       {contextHolder}
       <Contact
+        loading={loadingAction}
+        onSendAction={onSendAction}
         activeDriverContact={activeDriverContact}
         setActiveDriverContact={setActiveDriverContact}
         pointsRecord={pointsRecord}

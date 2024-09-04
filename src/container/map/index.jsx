@@ -7,7 +7,7 @@ import { MapboxMap } from './Map';
 
 const POINT_TEST_ID = 'test';
 const POINT_UPDATE_INTERVAL = 2_000; // 2 sec;
-const POINT_ACTIVE_DURATION_MINUTES = 15;
+const POINT_ACTIVE_DURATION_MINUTES = 20;
 const POINT_ACTIVE_STATE_CHECK_INTERVAL = 1.5 * 60 * 1000; // 1 min 30 sec
 
 const Tracking = () => {
