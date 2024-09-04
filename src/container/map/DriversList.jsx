@@ -4,6 +4,7 @@ import axios from 'axios';
 import Icon from 'feather-icons-react';
 import debounce from 'lodash.debounce';
 import { memo, useEffect, useRef, useState } from 'react';
+import { IoReloadOutline } from "react-icons/io5";
 import { axiosClient } from '../../config/api';
 import { copyToClipboard } from '../../utility/browser';
 import { Contact } from './Contact';
@@ -57,7 +58,7 @@ const DriversList = ({
         action,
         driver_id: driverId,
       });
-      openNotification('Successfully sent action', `Driver ID: ${driverId}`);
+      openNotification(`Driver ID: ${driverId}`, 'Successfully sent action');
     } catch (er) {
       console.error('Error sending contact action to driver: ', er);
     } finally {
@@ -130,7 +131,7 @@ const DriversList = ({
             onClick={() => onSendAction('reload', driver.id)}
             title="Reload"
           >
-            <Icon icon="loader" />
+            <IoReloadOutline />
           </button>
         </Flex>
       </li>

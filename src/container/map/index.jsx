@@ -19,7 +19,13 @@ const Tracking = () => {
   const togglePointActiveState = () => {
     Object.keys(pointsRef.current).forEach((driverId) => {
       const point = pointsRef.current[driverId];
-      if (point.active && hasMinutesPassed(point.sent_time, POINT_ACTIVE_DURATION_MINUTES)) {
+      if (
+        point.active &&
+        hasMinutesPassed(
+          point.sent_time,
+          POINT_ACTIVE_DURATION_MINUTES,
+        )
+      ) {
         addPointToMap({ ...point, active: false });
       }
     });
